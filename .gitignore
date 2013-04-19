@@ -35,3 +35,9 @@ local.properties
 
 # PDT-specific
 .buildpath
+
+
+
+#Custom ignore
+#==============================
+target/**/*
