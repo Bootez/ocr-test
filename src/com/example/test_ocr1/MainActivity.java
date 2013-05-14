@@ -11,8 +11,6 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,22 +22,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.googlecode.tesseract.android.TessBaseAPI;
-
 public class MainActivity extends Activity {
+	
+	
+	private static final String TAG = MainActivity.class.getName();
+	
+	private Button _button;
+	private ImageView _image;
+	private TextView _field;
+	private String _path;
+	private boolean _taken;
+	private String lang = "nld";
 
-	protected Button _button;
-	protected ImageView _image;
-	protected TextView _field;
-	protected String _path;
-	protected boolean _taken;
-	protected String lang = "nld";
+	private static final String PHOTO_TAKEN = "photo_taken";
 
-	protected static final String PHOTO_TAKEN = "photo_taken";
-
-	public static final String DATA_PATH = Environment
+	private static final String DATA_PATH = Environment
 			.getExternalStorageDirectory() + "/com.example.test_ocr1/";
-	private static final String TAG = "--";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,13 +57,13 @@ public class MainActivity extends Activity {
 
 	public class ButtonClickHandler implements View.OnClickListener {
 		public void onClick(View view) {
-			Log.i("MakeMachine", "ButtonClickHandler.onClick()");
+			Log.i(TAG, "ButtonClickHandler.onClick()");
 			startCameraActivity();
 		}
 	}
 
 	protected void startCameraActivity() {
-		Log.i("MakeMachine", "startCameraActivity()");
+		Log.i(TAG, "startCameraActivity()");
 		File file = new File(_path);
 		Uri outputFileUri = Uri.fromFile(file);
 
@@ -78,10 +76,10 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.i("MakeMachine", "resultCode: " + resultCode);
+		Log.i(TAG, "resultCode: " + resultCode);
 		switch (resultCode) {
 		case 0:
-			Log.i("MakeMachine", "User cancelled");
+			Log.i(TAG, "User cancelled");
 			break;
 
 		case -1:
@@ -91,7 +89,7 @@ public class MainActivity extends Activity {
 	}
 
 	protected void onPhotoTaken() {
-		Log.i("MakeMachine", "onPhotoTaken");
+		Log.i(TAG, "onPhotoTaken");
 
 		_taken = true;
 
@@ -105,9 +103,9 @@ public class MainActivity extends Activity {
 		_field.setVisibility(View.GONE);
 
 		try {
-			rotateImage(bitmap);
-			String text = recognize(bitmap);
-			text = text.replaceAll("\\D+", "");
+			ImageUtil.autoRotate(bitmap, _path);
+			String text = ImageUtil.recognizeDigits(bitmap);
+			//text = text.replaceAll("\\D+", "");
 
 			Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 
@@ -119,7 +117,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		Log.i("MakeMachine", "onRestoreInstanceState()");
+		Log.i(TAG, "onRestoreInstanceState()");
 		if (savedInstanceState.getBoolean(MainActivity.PHOTO_TAKEN)) {
 			onPhotoTaken();
 		}
@@ -129,55 +127,7 @@ public class MainActivity extends Activity {
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean(MainActivity.PHOTO_TAKEN, _taken);
 	}
-
-	protected void rotateImage(Bitmap bitmap) throws IOException {
-		// _path = path to the image to be OCRed
-		ExifInterface exif = new ExifInterface(_path);
-		int exifOrientation = exif
-				.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-						ExifInterface.ORIENTATION_NORMAL);
-
-		int rotate = 0;
-
-		switch (exifOrientation) {
-		case ExifInterface.ORIENTATION_ROTATE_90:
-			rotate = 90;
-			break;
-		case ExifInterface.ORIENTATION_ROTATE_180:
-			rotate = 180;
-			break;
-		case ExifInterface.ORIENTATION_ROTATE_270:
-			rotate = 270;
-			break;
-		}
-
-		if (rotate != 0) {
-			int w = bitmap.getWidth();
-			int h = bitmap.getHeight();
-
-			// Setting pre rotate
-			Matrix mtx = new Matrix();
-			mtx.preRotate(rotate);
-
-			// Rotating Bitmap & convert to ARGB_8888, required by tess
-			bitmap = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
-			bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-		}
-
-	}
-
-	protected String recognize(Bitmap bitmap) {
-		TessBaseAPI baseApi = new TessBaseAPI();
-		baseApi.setVariable("classify_bln_numeric_mode", "1");
-		baseApi.setVariable("tessedit_char_whitelist", "0123456789");
-		baseApi.init(DATA_PATH, lang);
-		baseApi.setImage(bitmap);
-		String recognizedText = baseApi.getUTF8Text();
-		baseApi.end();
-
-		return recognizedText;
-	}
-
+	
 	protected void copyToExtern() {
 
 		String[] paths = new String[] { DATA_PATH, DATA_PATH + "tessdata/" };
@@ -193,7 +143,6 @@ public class MainActivity extends Activity {
 
 				Log.v(TAG, "Created directory " + path + " on sdcard");
 			}
-
 		}
 
 		if (!(new File(DATA_PATH + "tessdata/" + lang + ".traineddata"))
