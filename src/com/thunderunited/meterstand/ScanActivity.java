@@ -33,12 +33,12 @@ public class ScanActivity extends Activity {
 	private TextView _field;
 	private String _path;
 	private boolean _taken;
-	private String lang = "nld";
-
+	private static final String LANG = "nld";
 	private static final String PHOTO_TAKEN = "photo_taken";
-
 	private static final String DATA_PATH = Environment
-			.getExternalStorageDirectory() + "/com.example.test_ocr1/";
+			.getExternalStorageDirectory()
+			+ "/"
+			+ ScanActivity.class.getPackage().getName() + "/";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -146,14 +146,14 @@ public class ScanActivity extends Activity {
 			}
 		}
 
-		if (!(new File(DATA_PATH + "tessdata/" + lang + ".traineddata"))
+		if (!(new File(DATA_PATH + "tessdata/" + LANG + ".traineddata"))
 				.exists()) {
 			try {
 				AssetManager assetManager = getAssets();
-				InputStream in = assetManager.open("tessdata/" + lang
+				InputStream in = assetManager.open("tessdata/" + LANG
 						+ ".traineddata");
 				OutputStream out = new FileOutputStream(DATA_PATH + "tessdata/"
-						+ lang + ".traineddata");
+						+ LANG + ".traineddata");
 
 				// Transfer bytes from in to out
 				byte[] buf = new byte[1024];
@@ -164,10 +164,10 @@ public class ScanActivity extends Activity {
 				in.close();
 				out.close();
 
-				Log.v(TAG, "Copied " + lang + " traineddata");
+				Log.v(TAG, "Copied " + LANG + " traineddata");
 			} catch (IOException e) {
 				Log.e(TAG,
-						"Was unable to copy " + lang + " traineddata "
+						"Was unable to copy " + LANG + " traineddata "
 								+ e.toString());
 			}
 		}

@@ -11,21 +11,22 @@ import android.os.Environment;
 import android.util.Log;
 
 public class ImageUtil {
-	
+
 	private static final String TESSEDIT_CHAR_WHITELIST = "tessedit_char_whitelist";
-	
 
 	private static final String TAG = ImageUtil.class.getName();
 	public static final String DATA_PATH = Environment
-			.getExternalStorageDirectory() + "/com.example.test_ocr1/";
+			.getExternalStorageDirectory()
+			+ "/"
+			+ ImageUtil.class.getPackage().getName() + "/";
 	protected static final String LANG = "nld";
-	
 
 	protected ImageUtil() {
 		// Prevent instantiation
 	}
 
-	public static void autoRotate(Bitmap bitmap, String path) throws IOException {
+	public static void autoRotate(Bitmap bitmap, String path)
+			throws IOException {
 		// _path = path to the image to be OCRed
 		ExifInterface exif = new ExifInterface(path);
 		int exifOrientation = exif
@@ -59,12 +60,12 @@ public class ImageUtil {
 			bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 		}
 	}
-	
-	
+
 	public static final String recognizeDigits(Bitmap bitmap) {
 		TessBaseAPI baseApi = new TessBaseAPI();
 		if (!baseApi.setVariable(TESSEDIT_CHAR_WHITELIST, "0123456789")) {
-			Log.e(TAG, "The tessedit_char_whitelist variable cannot be set with value: '0123456789'");
+			Log.e(TAG,
+					"The tessedit_char_whitelist variable cannot be set with value: '0123456789'");
 		}
 		baseApi.setDebug(true);
 		baseApi.init(DATA_PATH, LANG);
