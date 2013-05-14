@@ -1,10 +1,12 @@
-package com.example.test_ocr1;
+package com.thunderunited.meterstand;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import com.example.test_ocr1.R;
 
 import android.app.Activity;
 import android.content.Intent;

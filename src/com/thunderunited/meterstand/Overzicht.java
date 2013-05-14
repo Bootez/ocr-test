@@ -1,4 +1,6 @@
-package com.example.test_ocr1;
+package com.thunderunited.meterstand;
+
+import com.example.test_ocr1.R;
 
 import android.os.Bundle;
 import android.app.Activity;

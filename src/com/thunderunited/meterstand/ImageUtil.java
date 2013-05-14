@@ -1,4 +1,4 @@
-package com.example.test_ocr1;
+package com.thunderunited.meterstand;
 
 import java.io.IOException;
 
@@ -11,6 +11,8 @@ import android.os.Environment;
 import android.util.Log;
 
 public class ImageUtil {
+	
+	private static final String TESSEDIT_CHAR_WHITELIST = "tessedit_char_whitelist";
 	
 
 	private static final String TAG = ImageUtil.class.getName();
@@ -61,7 +63,7 @@ public class ImageUtil {
 	
 	public static final String recognizeDigits(Bitmap bitmap) {
 		TessBaseAPI baseApi = new TessBaseAPI();
-		if (!baseApi.setVariable("tessedit_char_whitelist", "0123456789")) {
+		if (!baseApi.setVariable(TESSEDIT_CHAR_WHITELIST, "0123456789")) {
 			Log.e(TAG, "The tessedit_char_whitelist variable cannot be set with value: '0123456789'");
 		}
 		baseApi.setDebug(true);
