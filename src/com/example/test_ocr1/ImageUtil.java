@@ -64,6 +64,7 @@ public class ImageUtil {
 		if (!baseApi.setVariable("tessedit_char_whitelist", "0123456789")) {
 			Log.e(TAG, "The tessedit_char_whitelist variable cannot be set with value: '0123456789'");
 		}
+		baseApi.setDebug(true);
 		baseApi.init(DATA_PATH, LANG);
 		baseApi.setImage(bitmap);
 		String recognizedText = baseApi.getUTF8Text();
