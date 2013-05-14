@@ -6,11 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.thunderunited.meterstand.R;
-
 import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -26,6 +27,15 @@ import android.widget.Toast;
 
 public class ScanActivity extends Activity {
 
+	private static final String DATA_PATH = Environment
+			.getExternalStorageDirectory()
+			+ "/"
+			+ ScanActivity.class.getPackage().getName() + "/";
+	
+	private String DB_NAME = DATA_PATH
+			+ "/foto.db";
+	private String TABLE_NAME = "mytable";
+
 	private static final String TAG = ScanActivity.class.getName();
 
 	private Button _button;
@@ -35,10 +45,6 @@ public class ScanActivity extends Activity {
 	private boolean _taken;
 	private static final String LANG = "nld";
 	private static final String PHOTO_TAKEN = "photo_taken";
-	private static final String DATA_PATH = Environment
-			.getExternalStorageDirectory()
-			+ "/"
-			+ ScanActivity.class.getPackage().getName() + "/";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,11 +85,11 @@ public class ScanActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.i(TAG, "resultCode: " + resultCode);
 		switch (resultCode) {
-		case 0:
+		case RESULT_CANCELED:
 			Log.i(TAG, "User cancelled");
 			break;
-
-		case -1:
+			
+		case RESULT_OK:
 			onPhotoTaken();
 			break;
 		}
@@ -102,9 +108,15 @@ public class ScanActivity extends Activity {
 		_image.setImageBitmap(bitmap);
 
 		_field.setVisibility(View.GONE);
+		
+		byte[] imageBytes = ImageUtil.bitmapToByteArray(bitmap);
 
 		try {
 			ImageUtil.autoRotate(bitmap, _path);
+			
+			createTable();
+			saveInDB(imageBytes);
+			
 			String text = ImageUtil.recognizeDigits(bitmap);
 			// text = text.replaceAll("\\D+", "");
 
@@ -171,6 +183,48 @@ public class ScanActivity extends Activity {
 								+ e.toString());
 			}
 		}
+	}
+	
+	void createTable() {
+        SQLiteDatabase myDb = openOrCreateDatabase(DB_NAME,
+                Context.MODE_PRIVATE, null);
+        String MySQL = "create table if not exists "
+                + TABLE_NAME
+                + " (_id INTEGER primary key autoincrement, name TEXT not null, image BLOB);";
+        myDb.execSQL(MySQL);
+        myDb.close();
+    }
+
+	void saveInDB(byte[] image) {
+		
+		SQLiteDatabase myDb = openOrCreateDatabase(DB_NAME,
+				Context.MODE_PRIVATE, null);
+		
+		String s = myDb.getPath();
+
+		myDb.execSQL("delete from " + TABLE_NAME); // clearing the table
+		ContentValues newValues = new ContentValues();
+		String name = "Foto's";
+		newValues.put("name", name);
+		try {
+			newValues.put("image", image);
+			long ret = myDb.insert(TABLE_NAME, null, newValues);
+			if (ret < 0) {
+				Toast.makeText(this, "Het opslaan is mislukt",
+						Toast.LENGTH_LONG);
+			}
+		} catch (Exception e) {
+			Toast.makeText(this, "Error Exception : " + e.getMessage(),
+					Toast.LENGTH_LONG);
+			Log.e(TAG, "Error", e);
+		}
+		myDb.close();
+		Log.i(TAG, "Saving Details \n Name : " + name);
+		Log.i(TAG, "Image Size : " + image.length + " KB");
+		Log.i(TAG, "Saved in DB : " + s);
+		
+		Toast.makeText(this.getBaseContext(),
+				"Image Saved in DB successfully.", Toast.LENGTH_SHORT).show();
 	}
 
 }

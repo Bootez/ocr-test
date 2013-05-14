@@ -1,5 +1,6 @@
 package com.thunderunited.meterstand;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
@@ -74,6 +75,14 @@ public class ImageUtil {
 		baseApi.end();
 
 		return recognizedText;
+	}
+	
+	public static byte[] bitmapToByteArray(Bitmap bitmap) {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+		byte[] byteArray = stream.toByteArray();
+
+		return byteArray;
 	}
 
 }
