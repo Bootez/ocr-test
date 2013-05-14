@@ -16,15 +16,27 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/CustomTheme" >
         <activity
-            android:name="com.example.test_ocr1.MainActivity"
+            android:name="com.example.test_ocr1.ScanActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.thunderunited.meterstand.Overzicht"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.thunderunited.meterstand.Handmatig"
+            android:label="@string/title_activity_handmatig" >
+        </activity>
+        <activity
+            android:name="com.thunderunited.meterstand.Information"
+            android:label="@string/title_activity_information" >
         </activity>
     </application>
 

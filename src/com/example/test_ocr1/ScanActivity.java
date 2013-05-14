@@ -22,10 +22,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class ScanActivity extends Activity {
 	
 	
-	private static final String TAG = MainActivity.class.getName();
+	private static final String TAG = ScanActivity.class.getName();
 	
 	private Button _button;
 	private ImageView _image;
@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 
 		copyToExtern();
 
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_scannen);
 
 		_image = (ImageView) findViewById(R.id.image);
 		_field = (TextView) findViewById(R.id.field);
@@ -118,14 +118,14 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		Log.i(TAG, "onRestoreInstanceState()");
-		if (savedInstanceState.getBoolean(MainActivity.PHOTO_TAKEN)) {
+		if (savedInstanceState.getBoolean(ScanActivity.PHOTO_TAKEN)) {
 			onPhotoTaken();
 		}
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putBoolean(MainActivity.PHOTO_TAKEN, _taken);
+		outState.putBoolean(ScanActivity.PHOTO_TAKEN, _taken);
 	}
 	
 	protected void copyToExtern() {
