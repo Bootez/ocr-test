@@ -1,6 +1,6 @@
 package com.thunderunited.meterstand;
 
-import com.example.test_ocr1.R;
+import com.thunderunited.meterstand.R;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,9 +12,10 @@ public class Information extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);		 
-		setContentView(R.layout.activity_information); 
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		setContentView(R.layout.activity_information);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+				R.layout.window_title);
 	}
 
 	@Override

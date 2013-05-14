@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.example.test_ocr1;
+package com.thunderunited.meterstand;
 
 public final class R {
     public static final class attr {

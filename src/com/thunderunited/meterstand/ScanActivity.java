@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.example.test_ocr1.R;
+import com.thunderunited.meterstand.R;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,10 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ScanActivity extends Activity {
-	
-	
+
 	private static final String TAG = ScanActivity.class.getName();
-	
+
 	private Button _button;
 	private ImageView _image;
 	private TextView _field;
@@ -107,7 +106,7 @@ public class ScanActivity extends Activity {
 		try {
 			ImageUtil.autoRotate(bitmap, _path);
 			String text = ImageUtil.recognizeDigits(bitmap);
-			//text = text.replaceAll("\\D+", "");
+			// text = text.replaceAll("\\D+", "");
 
 			Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 
@@ -129,7 +128,7 @@ public class ScanActivity extends Activity {
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean(ScanActivity.PHOTO_TAKEN, _taken);
 	}
-	
+
 	protected void copyToExtern() {
 
 		String[] paths = new String[] { DATA_PATH, DATA_PATH + "tessdata/" };
