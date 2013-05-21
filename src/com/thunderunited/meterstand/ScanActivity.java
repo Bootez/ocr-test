@@ -7,8 +7,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,9 +33,8 @@ public class ScanActivity extends Activity {
 			.getExternalStorageDirectory()
 			+ "/"
 			+ ScanActivity.class.getPackage().getName() + "/";
-	
-	private String DB_NAME = DATA_PATH
-			+ "/foto.db";
+
+	private String DB_NAME = DATA_PATH + "/foto.db";
 	private String TABLE_NAME = "mytable";
 
 	private static final String TAG = ScanActivity.class.getName();
@@ -41,10 +42,13 @@ public class ScanActivity extends Activity {
 	private Button _button;
 	private ImageView _image;
 	private TextView _field;
-	private String _path;
+	private String _path = DATA_PATH + "/ocr-image.jpg";
 	private boolean _taken;
 	private static final String LANG = "nld";
 	private static final String PHOTO_TAKEN = "photo_taken";
+
+	private static final int PHOTO_CAPTURE_INTENT = 1;
+	private static final int PHOTO_CROP_INTENT = 2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,8 +62,6 @@ public class ScanActivity extends Activity {
 		_field = (TextView) findViewById(R.id.field);
 		_button = (Button) findViewById(R.id.button);
 		_button.setOnClickListener(new ButtonClickHandler());
-
-		_path = DATA_PATH + "/make_machine_example.jpg";
 	}
 
 	public class ButtonClickHandler implements View.OnClickListener {
@@ -74,29 +76,36 @@ public class ScanActivity extends Activity {
 		File file = new File(_path);
 		Uri outputFileUri = Uri.fromFile(file);
 
-		Intent intent = new Intent(
-				android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
 
-		startActivityForResult(intent, 0);
+		startActivityForResult(intent, PHOTO_CAPTURE_INTENT);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.i(TAG, "resultCode: " + resultCode);
-		switch (resultCode) {
-		case RESULT_CANCELED:
-			Log.i(TAG, "User cancelled");
-			break;
-			
-		case RESULT_OK:
-			onPhotoTaken();
-			break;
+
+		if (resultCode == RESULT_CANCELED) {
+
+			Log.w(TAG, "User cancelled");
+
+		} else if (resultCode == RESULT_OK) {
+
+			switch (requestCode) {
+			case PHOTO_CAPTURE_INTENT:
+				onPhotoTaken();
+				break;
+
+			case PHOTO_CROP_INTENT:
+				onPhotoCroped();
+				break;
+			}
 		}
 	}
 
-	protected void onPhotoTaken() {
-		Log.i(TAG, "onPhotoTaken");
+	private void onPhotoCroped() {
+		Log.i(TAG, "onPhotoCroped");
 
 		_taken = true;
 
@@ -106,26 +115,49 @@ public class ScanActivity extends Activity {
 		Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
 
 		_image.setImageBitmap(bitmap);
-
 		_field.setVisibility(View.GONE);
-		
+
 		byte[] imageBytes = ImageUtil.bitmapToByteArray(bitmap);
 
 		try {
 			ImageUtil.autoRotate(bitmap, _path);
-			
+
 			createTable();
 			saveInDB(imageBytes);
-			
+
 			String text = ImageUtil.recognizeDigits(bitmap);
 			// text = text.replaceAll("\\D+", "");
 
-			Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+
+			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+			String title = getString(R.string.recognition_done_message);
+			String closeButtonStr = getString(R.string.close);
+			alertDialog.setTitle(title);
+			alertDialog.setMessage(text);
+			alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, closeButtonStr, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}
+			});
+			alertDialog.show();
 
 		} catch (IOException e) {
 			Toast.makeText(this, "Rotate is mislukt.", Toast.LENGTH_SHORT)
 					.show();
 		}
+	}
+
+	protected void onPhotoTaken() {
+		File file = new File(_path);
+		Uri outputFileUri = Uri.fromFile(file);
+
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setType("image/*");
+		intent.setDataAndType(outputFileUri, "image/*");
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+
+		startActivityForResult(intent, PHOTO_CROP_INTENT);
 	}
 
 	@Override
@@ -184,22 +216,22 @@ public class ScanActivity extends Activity {
 			}
 		}
 	}
-	
-	void createTable() {
-        SQLiteDatabase myDb = openOrCreateDatabase(DB_NAME,
-                Context.MODE_PRIVATE, null);
-        String MySQL = "create table if not exists "
-                + TABLE_NAME
-                + " (_id INTEGER primary key autoincrement, name TEXT not null, image BLOB);";
-        myDb.execSQL(MySQL);
-        myDb.close();
-    }
 
-	void saveInDB(byte[] image) {
-		
+	void createTable() {
 		SQLiteDatabase myDb = openOrCreateDatabase(DB_NAME,
 				Context.MODE_PRIVATE, null);
-		
+		String MySQL = "create table if not exists "
+				+ TABLE_NAME
+				+ " (_id INTEGER primary key autoincrement, name TEXT not null, image BLOB);";
+		myDb.execSQL(MySQL);
+		myDb.close();
+	}
+
+	void saveInDB(byte[] image) {
+
+		SQLiteDatabase myDb = openOrCreateDatabase(DB_NAME,
+				Context.MODE_PRIVATE, null);
+
 		String s = myDb.getPath();
 
 		myDb.execSQL("delete from " + TABLE_NAME); // clearing the table
@@ -222,7 +254,7 @@ public class ScanActivity extends Activity {
 		Log.i(TAG, "Saving Details \n Name : " + name);
 		Log.i(TAG, "Image Size : " + image.length + " KB");
 		Log.i(TAG, "Saved in DB : " + s);
-		
+
 		Toast.makeText(this.getBaseContext(),
 				"Image Saved in DB successfully.", Toast.LENGTH_SHORT).show();
 	}
