@@ -3,8 +3,12 @@
 
     <string name="app_name">Meterstand</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_handmatig">Handmatig</string>
     <string name="title_activity_information">Information</string>
+    <string name="recognition_done_message">Het resultaat van OCR</string>
+    <string name="close">Sluiten</string>
+    <string name="taken_photo">Neem een foto voor OCR</string>
+    <string name="no_image">Nog geen afbeelding</string>
+    <string name="ocr_description">Optical character recognition (OCR), of in het Nederlands: optische tekenherkenning is een transformatie waarbij uit een afbeelding van een tekst door middel van patroonherkenning alle tekens uit de afbeelding als zodanig worden herkend en apart opgeslagen door een computer(programma). Oftewel, de tekst uit een afbeelding wordt omgezet in bewerkbare tekst. Een voorbeeld hiervan is Automatische kentekenplaatherkenning.</string>
 
 </resources>

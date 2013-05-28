@@ -2,9 +2,14 @@ package com.thunderunited.meterstand;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
@@ -12,8 +17,6 @@ import android.os.Environment;
 import android.util.Log;
 
 public class ImageUtil {
-
-	private static final String TESSEDIT_CHAR_WHITELIST = "tessedit_char_whitelist";
 
 	private static final String TAG = ImageUtil.class.getName();
 	public static final String DATA_PATH = Environment
@@ -64,25 +67,45 @@ public class ImageUtil {
 
 	public static final String recognizeDigits(Bitmap bitmap) {
 		TessBaseAPI baseApi = new TessBaseAPI();
-		if (!baseApi.setVariable(TESSEDIT_CHAR_WHITELIST, "0123456789")) {
-			Log.e(TAG,
-					"The tessedit_char_whitelist variable cannot be set with value: '0123456789'");
-		}
 		baseApi.setDebug(true);
 		baseApi.init(DATA_PATH, LANG);
+		if (!baseApi.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST, "0123456789")) {
+			Log.e(TAG,
+					"The tessedit_char_whitelist (TessBaseAPI.VAR_CHAR_WHITELIST) variable cannot be set with value: '0123456789'");
+		}
 		baseApi.setImage(bitmap);
 		String recognizedText = baseApi.getUTF8Text();
 		baseApi.end();
 
 		return recognizedText;
 	}
-	
+
 	public static byte[] bitmapToByteArray(Bitmap bitmap) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 		byte[] byteArray = stream.toByteArray();
 
 		return byteArray;
+	}
+
+	public static boolean hasCrop(Activity activity) {
+		return hasCrop(activity.getPackageManager());
+	}
+
+	public static boolean hasCrop(PackageManager packageManager) {
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setType("image/*");
+
+		return hasIntent(intent, packageManager);
+	}
+
+	public static boolean hasIntent(Intent intent, PackageManager packageManager) {
+		List<ResolveInfo> list = packageManager
+				.queryIntentActivities(intent, 0);
+
+		boolean hasCrop = list.size() > 0;
+
+		return hasCrop;
 	}
 
 }
