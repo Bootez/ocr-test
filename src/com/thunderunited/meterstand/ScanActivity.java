@@ -8,12 +8,9 @@ import java.io.OutputStream;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -23,8 +20,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class ScanActivity extends Activity {
@@ -34,13 +29,9 @@ public class ScanActivity extends Activity {
 			+ "/"
 			+ ScanActivity.class.getPackage().getName() + "/";
 
-	private String TABLE_NAME = "mytable";
-
 	private static final String TAG = ScanActivity.class.getName();
 
 	private Button _button;
-	private ImageView _image;
-	private TextView _field;
 	private String _path = DATA_PATH + "/ocr-image.jpg";
 	private boolean _taken;
 	private static final String LANG = "nld";
@@ -56,9 +47,7 @@ public class ScanActivity extends Activity {
 		copyToExtern();
 
 		setContentView(R.layout.activity_scannen);
-
-		_image = (ImageView) findViewById(R.id.image);
-		_field = (TextView) findViewById(R.id.field);
+		
 		_button = (Button) findViewById(R.id.button);
 		_button.setOnClickListener(new ButtonClickHandler());
 	}
@@ -113,42 +102,36 @@ public class ScanActivity extends Activity {
 
 		Bitmap bitmap = BitmapFactory.decodeFile(_path, options);
 
-		_image.setImageBitmap(bitmap);
-		_field.setVisibility(View.GONE);
-
-		byte[] imageBytes = ImageUtil.bitmapToByteArray(bitmap);
-
 		try {
 			ImageUtil.autoRotate(bitmap, _path);
-
-			createTable();
-			saveInDB(imageBytes);
-
-			final String text = ImageUtil.recognizeDigits(bitmap);
-
-			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-			String title = getString(R.string.recognition_done_message);
-			String closeButtonStr = getString(R.string.go_to_control);
-			alertDialog.setTitle(title);
-			alertDialog.setMessage(text);
-			alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, closeButtonStr, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.cancel();
-					
-					Intent intent = new Intent(getBaseContext(), Handmatig.class);
-					intent.putExtra(Handmatig.METER_LEVEL, text);
-					startActivity(intent);
-					finish();
-				}
-			});
-			alertDialog.show();
-
 		} catch (IOException e) {
-			Toast.makeText(this, "Rotate is mislukt.", Toast.LENGTH_SHORT)
+			Toast.makeText(this, "Roteren is mislukt.", Toast.LENGTH_SHORT)
 					.show();
 		}
-	}
+		
+		final String text = ImageUtil.recognizeDigits(bitmap);
 
+		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+		String title = getString(R.string.recognition_done_message);
+		String closeButtonStr = getString(R.string.go_to_control);
+		alertDialog.setTitle(title);
+		alertDialog.setMessage(text);
+		alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, closeButtonStr, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+				
+				Intent intent = new Intent(getBaseContext(), Handmatig.class);
+				intent.putExtra(Handmatig.METER_LEVEL_KEY, text);
+				intent.putExtra(Handmatig.IMAGE_PATH_KEY, _path);
+				startActivity(intent);
+				
+				ScanActivity.this.finish();
+			}
+		});
+		alertDialog.show();
+
+	}
+	
 	protected void onPhotoTaken() {
 		File file = new File(_path);
 		Uri outputFileUri = Uri.fromFile(file);
@@ -217,51 +200,4 @@ public class ScanActivity extends Activity {
 			}
 		}
 	}
-
-	void createTable() {
-		String databasePath = DatabaseUtil.getDatabasePath();
-		
-		SQLiteDatabase myDb = openOrCreateDatabase(databasePath,
-				Context.MODE_PRIVATE, null);
-		String MySQL = "create table if not exists "
-				+ TABLE_NAME
-				+ " (_id INTEGER primary key autoincrement, name TEXT not null, image BLOB);";
-		myDb.execSQL(MySQL);
-		myDb.close();
-	}
-
-	void saveInDB(byte[] image) {
-		
-		String databasePath = DatabaseUtil.getDatabasePath();
-
-		SQLiteDatabase myDb = openOrCreateDatabase(databasePath,
-				Context.MODE_PRIVATE, null);
-
-		String s = myDb.getPath();
-
-		myDb.execSQL("delete from " + TABLE_NAME); // clearing the table
-		ContentValues newValues = new ContentValues();
-		String name = "Foto's";
-		newValues.put("name", name);
-		try {
-			newValues.put("image", image);
-			long ret = myDb.insert(TABLE_NAME, null, newValues);
-			if (ret < 0) {
-				Toast.makeText(this, "Het opslaan is mislukt",
-						Toast.LENGTH_LONG);
-			}
-		} catch (Exception e) {
-			Toast.makeText(this, "Error Exception : " + e.getMessage(),
-					Toast.LENGTH_LONG);
-			Log.e(TAG, "Error", e);
-		}
-		myDb.close();
-		Log.i(TAG, "Saving Details \n Name : " + name);
-		Log.i(TAG, "Image Size : " + image.length + " KB");
-		Log.i(TAG, "Saved in DB : " + s);
-
-		Toast.makeText(this.getBaseContext(),
-				"Image Saved in DB successfully.", Toast.LENGTH_SHORT).show();
-	}
-
 }
