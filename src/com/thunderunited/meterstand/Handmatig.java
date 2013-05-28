@@ -28,16 +28,29 @@ public class Handmatig extends Activity {
 	private String DB_NAME = DATA_PATH + "/foto.db";
 	private String TABLE_NAME = "handmatig";
 	private Spinner spinner1, spinner2;
-	SimpleDateFormat dateFormatISO8601 = new SimpleDateFormat("yyyy-MM-dd");
-	String crntDate = dateFormatISO8601.format(new Date());
+	private SimpleDateFormat dateFormatISO8601 = new SimpleDateFormat("yyyy-MM-dd");
+	private String crntDate = dateFormatISO8601.format(new Date());
+	public static final String METER_LEVEL = "meter_level";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Bundle bundle = getIntent().getExtras();
+		String meterValue = null;
+		if (bundle != null) {
+			meterValue = bundle.getString(METER_LEVEL);
+		}
+		
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.activity_handmatig);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.window_title);
+		
+		if (meterValue != null) {
+			EditText meterValueEditText = (EditText)findViewById(R.id.tbValue);
+			meterValueEditText.setText(meterValue);
+		}
 		
 		_button = (Button) findViewById(R.id.btnSubmit);
 		_button.setOnClickListener(new ButtonClickHandler());

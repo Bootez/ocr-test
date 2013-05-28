@@ -124,19 +124,21 @@ public class ScanActivity extends Activity {
 			createTable();
 			saveInDB(imageBytes);
 
-			String text = ImageUtil.recognizeDigits(bitmap);
-			// text = text.replaceAll("\\D+", "");
-
-			//Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+			final String text = ImageUtil.recognizeDigits(bitmap);
 
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 			String title = getString(R.string.recognition_done_message);
-			String closeButtonStr = getString(R.string.close);
+			String closeButtonStr = getString(R.string.go_to_control);
 			alertDialog.setTitle(title);
 			alertDialog.setMessage(text);
 			alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, closeButtonStr, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.cancel();
+					
+					Intent intent = new Intent(getBaseContext(), Handmatig.class);
+					intent.putExtra(Handmatig.METER_LEVEL, text);
+					startActivity(intent);
+					finish();
 				}
 			});
 			alertDialog.show();
