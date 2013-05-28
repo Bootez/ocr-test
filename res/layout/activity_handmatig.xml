@@ -13,10 +13,8 @@
         android:id="@+id/btnSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/sprTypeofValue"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/tbValue"
-        android:layout_marginBottom="34dp"
+		android:layout_below="@+id/sprTypeofValue"
+		android:layout_centerHorizontal="true"
         android:text="Verzenden" />
 
     <Spinner
@@ -30,9 +28,8 @@
         android:id="@+id/tbValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/sprTypeofMeter"
         android:layout_below="@+id/sprTypeofMeter"
-        android:layout_marginTop="19dp"
+        android:layout_centerHorizontal="true"
         android:ems="10"
         android:hint="Stand"
         android:inputType="numberDecimal" />
@@ -41,8 +38,7 @@
         android:id="@+id/sprTypeofValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tbValue"
-        android:layout_alignRight="@+id/tbValue"
+        android:layout_centerHorizontal="true"
         android:layout_below="@+id/tbValue"
         android:layout_marginTop="32dp" />
 
