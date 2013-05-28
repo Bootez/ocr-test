@@ -31,33 +31,33 @@ public final class R {
         public static final int scannen=0x7f020007;
     }
     public static final class id {
-        public static final int action_settings=0x7f090013;
-        public static final int btnInfo=0x7f09000b;
-        public static final int btnManual=0x7f09000d;
-        public static final int btnOverzicht=0x7f09000e;
-        public static final int btnScannen=0x7f09000c;
-        public static final int btnSettings=0x7f09000a;
+        public static final int action_settings=0x7f090012;
+        public static final int btnInfo=0x7f09000a;
+        public static final int btnManual=0x7f09000c;
+        public static final int btnOverzicht=0x7f09000d;
+        public static final int btnScannen=0x7f09000b;
+        public static final int btnSettings=0x7f090009;
         public static final int btnSubmit=0x7f090000;
-        public static final int button=0x7f090011;
-        public static final int editText1=0x7f090003;
-        public static final int field=0x7f09000f;
-        public static final int header=0x7f090012;
-        public static final int image=0x7f090010;
-        public static final int sprTypeofMeter=0x7f090004;
+        public static final int button=0x7f090010;
+        public static final int field=0x7f09000e;
+        public static final int header=0x7f090011;
+        public static final int image=0x7f09000f;
+        public static final int sprTypeofMeter=0x7f090003;
         public static final int sprTypeofValue=0x7f090001;
         public static final int tbValue=0x7f090002;
-        public static final int textView1=0x7f090006;
-        public static final int textView2=0x7f090005;
-        public static final int textView3=0x7f090008;
-        public static final int textView4=0x7f090007;
-        public static final int textView5=0x7f090009;
+        public static final int textView1=0x7f090005;
+        public static final int textView2=0x7f090004;
+        public static final int textView3=0x7f090007;
+        public static final int textView4=0x7f090006;
+        public static final int textView5=0x7f090008;
     }
     public static final class layout {
         public static final int activity_handmatig=0x7f030000;
         public static final int activity_information=0x7f030001;
         public static final int activity_overzicht=0x7f030002;
-        public static final int activity_scannen=0x7f030003;
-        public static final int window_title=0x7f030004;
+        public static final int activity_preferences=0x7f030003;
+        public static final int activity_scannen=0x7f030004;
+        public static final int window_title=0x7f030005;
     }
     public static final class menu {
         public static final int handmatig=0x7f080000;
@@ -70,13 +70,24 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f070001;
         public static final int app_name=0x7f070000;
-        public static final int close=0x7f070005;
-        public static final int no_image=0x7f070007;
-        public static final int ocr_description=0x7f070008;
-        public static final int recognition_done_message=0x7f070004;
-        public static final int taken_photo=0x7f070006;
+        public static final int close=0x7f070006;
+        public static final int no_image=0x7f070008;
+        public static final int ocr_description=0x7f070009;
+        public static final int preferences_address=0x7f07000b;
+        public static final int preferences_energy_company=0x7f07000e;
+        public static final int preferences_house_number=0x7f07000d;
+        public static final int preferences_key_address=0x7f070010;
+        public static final int preferences_key_energy_company=0x7f070013;
+        public static final int preferences_key_house_number=0x7f070012;
+        public static final int preferences_key_name=0x7f07000f;
+        public static final int preferences_key_postcode=0x7f070011;
+        public static final int preferences_name=0x7f07000a;
+        public static final int preferences_postcode=0x7f07000c;
+        public static final int recognition_done_message=0x7f070005;
+        public static final int taken_photo=0x7f070007;
         public static final int title_activity_handmatig=0x7f070002;
         public static final int title_activity_information=0x7f070003;
+        public static final int title_activity_preferences=0x7f070004;
     }
     public static final class style {
         /** 

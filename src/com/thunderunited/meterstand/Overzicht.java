@@ -32,6 +32,10 @@ public class Overzicht extends Activity {
 	public void scannenClick(View v) {
 		startChosenActivity(ScanActivity.class);
 	}
+	
+	public void onSettingsClick(View v) {
+		startChosenActivity(PreferencesActivity.class);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -40,7 +44,7 @@ public class Overzicht extends Activity {
 		return true;
 	}
 
-	public void startChosenActivity(Class actName) {
+	public void startChosenActivity(Class<? extends Activity> actName) {
 		Intent intent = new Intent(this, actName);
 		startActivity(intent);
 	}

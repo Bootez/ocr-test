@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="@drawable/background" >
+
+    <EditTextPreference
+        android:key="@string/preferences_key_name"
+        android:title="@string/preferences_name" />
+
+    <EditTextPreference
+        android:key="@string/preferences_key_address"
+        android:title="@string/preferences_address" />
+
+    <EditTextPreference
+        android:key="@string/preferences_key_postcode"
+        android:title="@string/preferences_postcode" />
+
+    <EditTextPreference
+        android:key="@string/preferences_key_house_number"
+        android:title="@string/preferences_house_number" />
+
+    <EditTextPreference
+        android:key="@string/preferences_key_energy_company"
+        android:title="@string/preferences_energy_company" />
+
+</PreferenceScreen>

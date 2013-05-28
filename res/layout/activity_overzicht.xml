@@ -17,7 +17,8 @@
         android:layout_below="@+id/btnScannen"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/instellingen" />
+        android:background="@drawable/instellingen"
+        android:onClick="onSettingsClick" />
 
     <ImageButton
         android:id="@+id/btnManual"
