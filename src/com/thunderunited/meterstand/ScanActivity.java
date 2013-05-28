@@ -34,7 +34,6 @@ public class ScanActivity extends Activity {
 			+ "/"
 			+ ScanActivity.class.getPackage().getName() + "/";
 
-	private String DB_NAME = DATA_PATH + "/foto.db";
 	private String TABLE_NAME = "mytable";
 
 	private static final String TAG = ScanActivity.class.getName();
@@ -218,7 +217,9 @@ public class ScanActivity extends Activity {
 	}
 
 	void createTable() {
-		SQLiteDatabase myDb = openOrCreateDatabase(DB_NAME,
+		String databasePath = DatabaseUtil.getDatabasePath();
+		
+		SQLiteDatabase myDb = openOrCreateDatabase(databasePath,
 				Context.MODE_PRIVATE, null);
 		String MySQL = "create table if not exists "
 				+ TABLE_NAME
@@ -228,8 +229,10 @@ public class ScanActivity extends Activity {
 	}
 
 	void saveInDB(byte[] image) {
+		
+		String databasePath = DatabaseUtil.getDatabasePath();
 
-		SQLiteDatabase myDb = openOrCreateDatabase(DB_NAME,
+		SQLiteDatabase myDb = openOrCreateDatabase(databasePath,
 				Context.MODE_PRIVATE, null);
 
 		String s = myDb.getPath();
