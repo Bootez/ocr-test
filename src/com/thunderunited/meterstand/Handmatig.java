@@ -8,6 +8,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,7 +29,7 @@ public class Handmatig extends Activity {
 	
 	private static final String TAG = Handmatig.class.getName();
 	
-	private static final int DB_VERSION = 2;
+	private static final int DB_VERSION = 1;
 	private Button _button;
 	private static final String DATA_PATH = Environment
 			.getExternalStorageDirectory()
@@ -117,13 +118,16 @@ public class Handmatig extends Activity {
 				+ " (_id INTEGER primary key autoincrement, soortMeter TEXT not null, stand INTEGER not null, soortStand TEXT not null, datum DATETIME, image BLOB);";
 		myDb.execSQL(MySQL);
 		
-		if (myDb.needUpgrade(DB_VERSION)) {
-			Log.w(TAG, "Database need upgrade, created image column now.");
-			String alterStatement = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN image BLOB";
-			myDb.execSQL(alterStatement);
+		try {
+			String statement = "ALTER TABLE " + TABLE_NAME + " ADD COLUMN image BLOB ";
+			myDb.execSQL(statement);
+		} catch(SQLException e) {
+			Log.i(TAG, "Column image already exists.");
+		} finally {
+			if (myDb != null) {
+				myDb.close();
+			}
 		}
-		
-		myDb.close();
 	}
 
 	void updateDatabase() {
