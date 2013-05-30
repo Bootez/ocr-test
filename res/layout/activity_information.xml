@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/company_logo_description"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/logo" />
 
     <TextView
         android:id="@+id/textView2"
