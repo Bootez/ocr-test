@@ -39,7 +39,7 @@ public class Handmatig extends Activity {
 	private String TABLE_NAME = "handmatig";
 	private Spinner spinner1, spinner2;
 	private SimpleDateFormat dateFormatISO8601 = new SimpleDateFormat(
-			"yyyy-MM-dd");
+			"yyyy-MM-dd HH:mm:ss");
 	private String crntDate = dateFormatISO8601.format(new Date());
 	private Bitmap ocrBitmap;
 
