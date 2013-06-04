@@ -154,8 +154,8 @@ public class Handmatig extends Activity {
 			
 			ContentValues values = new ContentValues();
 			values.put("soortMeter", spinner1.getSelectedItem().toString());
-			values.put("stand", spinner2.getSelectedItem().toString());
-			values.put("soortStand", stand.getText().toString());
+			values.put("soortStand", spinner2.getSelectedItem().toString());
+			values.put("stand", stand.getText().toString());
 			values.put("datum", crntDate);
 			values.put("image", imageBytes);
 			

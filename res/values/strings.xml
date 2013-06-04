@@ -30,6 +30,8 @@
     <string name="client_name">I.D.E. Software</string>
     <string name="company_address">Campus 2 – 6, 8017 CA Zwolle</string>
     <string name="company_logo_description">Bedrijfslogo</string>
+    <string name="title_activity_mijnoverzicht">Mijn overzicht</string>
+   
     
 
 </resources>
