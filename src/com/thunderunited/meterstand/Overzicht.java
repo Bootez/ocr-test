@@ -48,5 +48,10 @@ public class Overzicht extends Activity {
 		Intent intent = new Intent(this, actName);
 		startActivity(intent);
 	}
+	
+	public void mijnOverzichtClick(View v){
+		startChosenActivity(Mijnoverzicht.class);
+	}
+
 
 }
