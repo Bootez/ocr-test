@@ -35,7 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/btnScannen"
         android:layout_marginRight="20dp"
-        android:background="@drawable/overzicht" />
+        android:background="@drawable/overzicht"
+        android:onClick="mijnOverzichtClick" />
 
     <ImageButton
         android:id="@+id/btnInfo"
