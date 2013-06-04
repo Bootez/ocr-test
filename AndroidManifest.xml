@@ -44,6 +44,10 @@
             android:name="com.thunderunited.meterstand.PreferencesActivity"
             android:label="@string/title_activity_preferences" >
         </activity>
+        <activity
+            android:name="com.thunderunited.meterstand.Mijnoverzicht"
+            android:label="@string/title_activity_mijnoverzicht" >
+        </activity>
     </application>
 
 </manifest>
